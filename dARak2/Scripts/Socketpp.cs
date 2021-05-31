@@ -11,8 +11,11 @@ public class Socketpp : MonoBehaviour
     // Start is called before the first frame update
     private Socket sock;
     public string receiveMsg;
-    public string other_nickname;
     public string player_nickname;
+    public string other_nickname;
+    public string snapshot_timestamp;
+    public string snapshot_intro;
+    //public int snapshot_like;
     public int player_uid;
     public int other_player_uid;
     public string timeStamp = "Not";

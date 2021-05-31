@@ -58,6 +58,32 @@ public class Login_server_to_client
     public int uid;
 }
 
+[System.Serializable]
+public class FindId_client_to_server
+{
+    public string action = "find_id";
+    public string email;
+}
+[System.Serializable]
+public class FindId_server_to_client
+{
+    public string action = "find_id";
+    public string[] result;
+}
+[System.Serializable]
+public class ModifyPw_client_to_server
+{
+    public string action = "modify_pw";
+    public string id;
+    public string email;
+}
+[System.Serializable]
+public class ModifyPw_server_to_client;
+{
+    public string action = "modify_pw";
+    public string result;
+}
+
 //TimelineScene
 [System.Serializable]
 public class Timeline_client_to_server
@@ -226,6 +252,102 @@ public class Followdelete_client_to_server
     public int to_uid;
 }
 
+//Search Scene
+[System.Serializable]
+public class Search_client_to_server
+{
+    public string action = "search";
+    public string query;
+}
+[System.Serializable]
+public class Search_server_to_client
+{
+    public string action = "search";
+    public Result[] result;
+}
+[System.Serializable]
+public class Result
+{
+    public int uid;
+    public string nickname;
+}
+
+//Album Scene
+[System.Serializable]
+public class Album_client_to_server
+{
+    public string action = "snapshot_album";
+    public int uid;
+}
+[System.Serializable]
+public class Album_server_to_client
+{
+    public string action = "snapshot_album";
+    public AlbumSnapshot[] albumsnapshot;
+}
+[System.Serializable]
+public class AlbumSnapshot
+{
+    public string snapshot_intro;
+    public int like_num;
+    public string timestamp;
+}
+
+//Edit Scnene
+[System.Serializable]
+public class ChangeName_client_to_server
+{
+    public string action = "modify_nickname";
+    public int uid;
+    public string nickname;
+}
+[System.Serializable]
+public class ChangePassword_client_to_server
+{
+    public string action = "modify_pw";
+    public int uid;
+    public string pw;
+    public string new_pw;
+}
+[System.Serializable]
+public class ChangeEmail_client_to_server
+{
+    public string action = "modify_email";
+    public int uid;
+    public string email;
+}
+[System.Serializable]
+public class ChangeIntroduce_client_to_server
+{
+    public string action = "modify_introduce";
+    public int uid;
+    public string introduce;
+}
+[System.Serializable]
+public class ChangeSnapshotDescription_client_to_server
+{
+    public string action = "modify_snapshotdescription";
+    public int uid;
+    public string timestamp;
+    public string introduce;
+}
+
+[System.Serializable]
+public class DeleteSnapshotDescription_client_to_server
+{
+    public string action = "snapshot_del";
+    public int uid;
+    public string timestamp;
+}
+
+[System.Serializable]
+public class LikeSnapshot_client_to_server
+{
+    public string action = "snapshot_like";
+    public int from_uid;
+    public int to_uid;
+    public string timestamp;
+}
 
 
 [System.Serializable]

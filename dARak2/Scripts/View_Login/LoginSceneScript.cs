@@ -115,6 +115,11 @@ public class LoginSceneScript : MonoBehaviour
         SignUpPanel.SetActive(false);
         AuthPanel.SetActive(true);
     }
+    public void GoBackSignUpScene()
+    {
+        SignUpPanel.SetActive(true);
+        AuthPanel.SetActive(false);
+    }
     public void GoSucessScene()
     {
         AuthPanel.SetActive(false);

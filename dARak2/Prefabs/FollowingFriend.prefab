@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 5049895398662086676}
   m_Layer: 5
   m_Name: FollowingFriend
-  m_TagString: Untagged
+  m_TagString: Following
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uid: 0
+  nickname: 
 --- !u!1 &1584548095971190887
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,8 +370,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 440, y: -120}
-  m_SizeDelta: {x: 345.29755, y: 147.45447}
+  m_AnchoredPosition: {x: 480, y: -120}
+  m_SizeDelta: {x: 400, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1584548096833866452
 CanvasRenderer:
@@ -403,16 +404,16 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 75
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
-    m_MaxSize: 250
+    m_MaxSize: 75
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uD55C\uB7C9 \uC870\uC544"
+  m_Text: "\uD314\uB85C\uC789 \uC774\uB984"
 --- !u!1 &1584548097108488467
 GameObject:
   m_ObjectHideFlags: 0

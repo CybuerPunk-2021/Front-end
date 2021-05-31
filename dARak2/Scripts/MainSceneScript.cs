@@ -8,6 +8,8 @@ public class MainSceneScript : MonoBehaviour
 {
     public GameObject View_Home;
     public GameObject View_HomeSnapshot;
+    public GameObject View_EditPage;
+    public GameObject View_EditImagePage;
     public GameObject View_Search;
     public GameObject View_Friend;
     public GameObject View_FriendPage;
@@ -66,85 +68,122 @@ public class MainSceneScript : MonoBehaviour
         }
     }
 
-    public void HometoFriend()
+    //Edit Profile
+    public void ActiveEditPage()
     {
-        View_Home.SetActive(false);
-        View_Friend.SetActive(true);
+        View_EditPage.SetActive(true);
     }
-    public void FriendtoHome()
+    public void UnActiveEditPage()
     {
-        View_Home.SetActive(true);
+        View_EditPage.SetActive(false);
+        GameObject.Find("MyPagePannel_Content").GetComponent<MyPageScript>().profile_client_to_server();
+    }
+
+    //Edit Snapshot
+    public void ActiveEditSnapshotPage()
+    {
+        GameObject current = EventSystem.current.currentSelectedGameObject;
+        socketpp.snapshot_timestamp = current.transform.parent.GetComponent<SnapshotUid>().snapshot_uid;
+        socketpp.snapshot_intro = current.transform.parent.GetComponent<SnapshotUid>().snapshot_intro;
+
+        View_EditImagePage.SetActive(true);
+        GameObject.Find("EditImagePage").GetComponent<EditSnapshotScript>().UpdateText();
+    }
+    public void UnActiveEditSnapshotPage()
+    {
+        View_EditImagePage.SetActive(false);
+        GameObject.Find("View_Album_Content").GetComponent<AlbumScript>().UpdateAlbum();
+    }
+
+    //Friend Page
+    public void ActiveFriend()
+    {
+        View_Friend.SetActive(true);
+        GameObject.Find("View_Follower_Content").GetComponent<FollowerScript>().UpdateFollower();
+    }
+    public void UnActiveFriend()
+    {
         View_Friend.SetActive(false);
     }
-    public void FriendtoFPage()
+
+    //Follow UnFollow Page
+    public void ActiveFriendPage()
     {
         GameObject current = EventSystem.current.currentSelectedGameObject;
         socketpp.other_player_uid = current.transform.parent.GetComponent<PrefabUid>().uid;
         socketpp.other_nickname = current.transform.parent.GetComponent<PrefabUid>().nickname;
-        Debug.Log(socketpp.other_nickname);
-        View_Friend.SetActive(false);
+
         View_FriendPage.SetActive(true);
-        View_FriendPage.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<FriendPageScript>().profile_client_to_server();
+
+        GameObject.Find("View_Friendpage_Content").GetComponent<FriendPageScript>().profile_client_to_server();
+        GameObject.Find("View_Friendpage_Content").GetComponent<FriendPageScript>().loadvisitbook_client_to_server();
     }
-    public void FPagetoFriend()
+    public void UnActiveFriendPage()
     {
-        View_Friend.SetActive(true);
+        GameObject.Find("View_Friendpage_Content").GetComponent<FriendPageScript>().ErasePost();
         View_FriendPage.SetActive(false);
     }
-   public void FPagetoFAlbum()
+
+    //Search Page
+    public void ActiveSearch()
     {
-        View_FriendPage.SetActive(false);
-        View_FriendAlbum.SetActive(true);
-    }
-    public void FAlbumtoFPage()
-    {
-        View_FriendPage.SetActive(true);
-        View_FriendAlbum.SetActive(false);
-    }
-    public void HometoFPage()
-    {
-        GameObject current = EventSystem.current.currentSelectedGameObject;
-        socketpp.other_player_uid = current.transform.parent.GetComponent<PrefabUid>().uid;
-        socketpp.other_nickname = current.transform.parent.GetComponent<PrefabUid>().nickname;
-        View_Home.SetActive(false);
-        View_FriendPage.SetActive(true);
-    }
-    public void HometoSearch()
-    {
-        View_Home.SetActive(false);
         View_Search.SetActive(true);
     }
-    public void SearchtoHome()
-    {
-        View_Home.SetActive(true);
-        View_Search.SetActive(false);
-    }
-    public void SearchtoFPage()
+    public void UnActiveSearch()
     {
         View_Search.SetActive(false);
-        View_FriendPage.SetActive(true);
     }
-    public void HometoAlbum()
+
+    //Album Page
+    public void ActiveAlbum()
     {
-        View_Home.SetActive(false);
         View_Album.SetActive(true);
+        GameObject.Find("View_Album_Content").GetComponent<AlbumScript>().album_client_to_server();
     }
-    public void AlbumtoHome()
+    public void UnActiveAlbum()
     {
-        View_Home.SetActive(true);
+        GameObject.Find("View_Album_Content").GetComponent<AlbumScript>().EraseAlbum();
         View_Album.SetActive(false);
     }
+
+    //FriendAlbum Page
+    public void ActiveFriendAlbum()
+    {
+        View_FriendAlbum.SetActive(true);
+    }
+    public void UnActiveFrendAlbum()
+    {
+        View_FriendAlbum.SetActive(false);
+    }
+
+    //Snapshot Page
     public void OnSnapshotScene()
     {
+        GameObject current = EventSystem.current.currentSelectedGameObject;
+        socketpp.other_player_uid = current.transform.parent.GetComponent<PrefabUid>().uid;
+        socketpp.other_nickname = current.transform.parent.GetComponent<PrefabUid>().nickname;
+        socketpp.snapshot_timestamp = current.transform.parent.GetComponent<SnapshotUid>().snapshot_uid;
+        socketpp.snapshot_intro = current.transform.parent.GetComponent<SnapshotUid>().snapshot_intro;
+        //socketpp.snapshot_like = int.Parse(current.transform.parent.GetComponent<SnapshotUid>().snapshot_like);
+
         View_HomeSnapshot.SetActive(true);
+        GameObject.Find("View_HomeSnapshot_Panel").GetComponent<HomeSnapShotScript>().snapshot_client_to_server();
     }
     public void OffSnapshotScene()
     {
         View_HomeSnapshot.SetActive(false);
     }
+
+    //Album Snapshot Page
     public void OnAlbumSnapshotScene()
     {
+        GameObject current = EventSystem.current.currentSelectedGameObject;
+        socketpp.snapshot_timestamp = current.transform.GetComponent<SnapshotUid>().snapshot_uid;
+        socketpp.snapshot_intro = current.transform.GetComponent<SnapshotUid>().snapshot_intro;
+        //socketpp.snapshot_like = int.Parse(current.transform.parent.GetComponent<SnapshotUid>().snapshot_like);
+
         View_AlbumSnapshot.SetActive(true);
+        GameObject.Find("View_AlbumSnapshot_Panel").GetComponent<AlbumSnapshotScript>().album_snapshot_client_to_server();
     }
     public void OffAlbumSnapshotScene()
     {

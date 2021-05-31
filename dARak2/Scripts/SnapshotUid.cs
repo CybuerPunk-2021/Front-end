@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HomeSnapShotScript : MonoBehaviour
+public class SnapshotUid : MonoBehaviour
 {
-    public int uid;
+    public string snapshot_uid;
+    public string snapshot_intro;
+    public string snapshot_like;
+
     // Start is called before the first frame update
     void Start()
     {

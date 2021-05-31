@@ -259,6 +259,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3195491107077399491}
   - component: {fileID: 2826240404741325292}
+  - component: {fileID: 5628041372332683560}
   m_Layer: 5
   m_Name: Snapshot
   m_TagString: Untagged
@@ -302,6 +303,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uid: 0
+  nickname: 
+--- !u!114 &5628041372332683560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3195491107077399488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1742114c17688b4da90b39d005ee106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  snapshot_uid: 
+  snapshot_intro: 
+  snapshot_like: 
 --- !u!1 &3195491107627623556
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +332,7 @@ GameObject:
   - component: {fileID: 3195491107627623558}
   - component: {fileID: 3195491107627623608}
   m_Layer: 5
-  m_Name: SanpshotImage
+  m_Name: SnapshotImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -544,8 +561,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 438.7555, y: -178.3003}
-  m_SizeDelta: {x: 400, y: 200}
+  m_AnchoredPosition: {x: 650, y: -100}
+  m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3195491108065045477
 CanvasRenderer:
@@ -576,15 +593,15 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_FontSize: 75
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
-    m_MaxSize: 200
-    m_Alignment: 0
+    m_MaxSize: 75
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uD55C\uB7C9\uC8FC\uC778\n"
+  m_Text: "\uD504\uB85C\uD544 \uC774\uB984"

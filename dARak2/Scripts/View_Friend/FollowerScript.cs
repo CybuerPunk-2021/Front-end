@@ -17,7 +17,16 @@ public class FollowerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
 
+    public void UpdateFollower()
+    {
+        GameObject[] followers = GameObject.FindGameObjectsWithTag("Follower");
+        foreach (GameObject follower in followers)
+        {
+            Destroy(follower);
+        }
+        followscene_client_to_server();
     }
 
     public void followscene_client_to_server()
@@ -26,7 +35,7 @@ public class FollowerScript : MonoBehaviour
         follow_scene.uid = socketpp.player_uid;
         socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(follow_scene));
         Followscene_server_to_client followers = JsonUtility.FromJson<Followscene_server_to_client>(socketpp.receiveMsg);
-        for(int i = 0; i<50; i++)
+        for(int i = 0; i < 50; i++)
         {
             MakeFollower(followers.follower[i].uid, followers.follower[i].nickname);
         }
@@ -40,6 +49,10 @@ public class FollowerScript : MonoBehaviour
         clone_follower_friend.transform.localScale = Vector3.one;
         clone_follower_friend.GetComponent<PrefabUid>().uid = follower_uid;
         clone_follower_friend.GetComponent<PrefabUid>().nickname = follower_nickname;
+        GameObject clone_follower_friend_button = clone_follower_friend.transform.Find("FollowerPage").gameObject;
+        clone_follower_friend_button.GetComponent<Button>().onClick.AddListener(() => GameObject.Find("View_Main").GetComponent<MainSceneScript>().ActiveFriendPage());
+        GameObject clone_follower_friend_addbutton = clone_follower_friend.transform.Find("addButton").gameObject;
+        clone_follower_friend_addbutton.GetComponent<Button>().onClick.AddListener(() => GameObject.Find("View_Friend").GetComponent<FriendScript>().followadd_client_to_server());
         //GameObject clone_follower_image = clone_snapshot.transform.Find("FollowerImage").gameObject;
         //clone_follower_image.GetComponent<Image>().sprite = Resources.Load<Sprite>("");
         GameObject clone_follower_text = clone_follower_friend.transform.Find("FollowerName").gameObject;
