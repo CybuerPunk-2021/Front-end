@@ -87,14 +87,14 @@ public class FindId_server_to_client
 [System.Serializable]
 public class ModifyPw_client_to_server
 {
-    public string action = "modify_pw";
+    public string action = "find_pw";
     public string id;
     public string email;
 }
 [System.Serializable]
 public class ModifyPw_server_to_client
 {
-    public string action = "modify_pw";
+    public string action = "find_pw";
     public string result;
 }
 

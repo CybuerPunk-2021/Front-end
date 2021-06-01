@@ -62,6 +62,7 @@ public class EditPageScript : MonoBehaviour
         changePw.pw = profilePasswordField.text;
         changePw.new_pw = profileNewPasswordField.text;
         socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(changePw));
+
     }
     
     public void ChangeIntroduce()

@@ -15,6 +15,7 @@ public class FriendPageScript : MonoBehaviour
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
         profile_client_to_server();
+        miniSnapshot_client_to_server();
         loadvisitbook_client_to_server();
     }
 
@@ -34,6 +35,20 @@ public class FriendPageScript : MonoBehaviour
         ProfileText.GetComponent<Text>().text = myProfile.self_intro;
         //SnapshotsImage.GetComponent<Image>().sprite = myProfile.snapshot_Info; //이미지 부분
     }
+
+    public void miniSnapshot_client_to_server()
+    {
+        Album_client_to_server miniSnapshot = new Album_client_to_server();
+        miniSnapshot.uid = socketpp.other_player_uid;
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(miniSnapshot));
+        Album_server_to_client miniSnapshot_one = JsonUtility.FromJson<Album_server_to_client>(socketpp.receiveMsg);
+        SnapshotsImage.GetComponent<PrefabUid>().uid = socketpp.other_player_uid;
+        SnapshotsImage.GetComponent<PrefabUid>().nickname = socketpp.other_nickname;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_uid = miniSnapshot_one.snapshot[0].timestamp;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_intro = miniSnapshot_one.snapshot[0].snapshot_intro;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_like = miniSnapshot_one.snapshot[0].like_num;
+    }
+
     public void UpdatePostBtn()
     {
         loadvisitbook_client_to_server();

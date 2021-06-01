@@ -150,6 +150,7 @@ public class MainSceneScript : MonoBehaviour
     public void ActiveFriendAlbum()
     {
         View_FriendAlbum.SetActive(true);
+        GameObject.Find("View_FriendAlbum_Content").GetComponent<FriendAlbumScript>().album_client_to_server();
     }
     public void UnActiveFrendAlbum()
     {
