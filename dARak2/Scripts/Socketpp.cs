@@ -15,7 +15,7 @@ public class Socketpp : MonoBehaviour
     public string other_nickname;
     public string snapshot_timestamp;
     public string snapshot_intro;
-    //public int snapshot_like;
+    public int snapshot_like;
     public int player_uid;
     public int other_player_uid;
     public string timeStamp = "Not";
@@ -42,7 +42,7 @@ public class Socketpp : MonoBehaviour
 
     public string socket(string cmd)
     {
-        byte[] receiverBuff = new byte[8192];
+        byte[] receiverBuff = new byte[16384];
         Debug.Log("Connected... Enter Q to exit");
         // Q 를 누를 때까지 계속 Echo 실행
         byte[] buff = Encoding.UTF8.GetBytes(cmd);

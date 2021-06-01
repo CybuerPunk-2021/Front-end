@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
-using Firebase.Storage;
-using Firebase.Database;
-using System.Threading.Tasks;
-using System.Threading;
+using UnityEngine.EventSystems;
 
 public class Timeline : MonoBehaviour
 {
@@ -19,7 +15,6 @@ public class Timeline : MonoBehaviour
     void Start()
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
-        OnClickLoginAnonymous();
         timeline_client_to_server();
     }
     // Update is called once per frame
@@ -27,70 +22,48 @@ public class Timeline : MonoBehaviour
     {
     }
 
-    public Firebase.Auth.FirebaseUser newUser;
-
-    public void OnClickLoginAnonymous()
-    {
-        Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-        auth.SignInAnonymouslyAsync().ContinueWith(task => {
-            if (task.IsCanceled)
-            {
-                Debug.LogError("SignInAnonymouslyAsync was canceled.");
-                return;
-            }
-            if (task.IsFaulted)
-            {
-                Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
-                return;
-            }
-
-            newUser = task.Result;
-            Debug.LogFormat("User signed in successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
-        });
-    }
-
-    public void localDown()
-    {
-        string local_url = "c:\\Users\\secur\\Downloads\\test.png";
-        FirebaseStorage storage = FirebaseStorage.DefaultInstance;
-        StorageReference storageRef = storage.GetReferenceFromUrl("gs://decisive-sylph-308301.appspot.com");
-        StorageReference island_ref = storageRef.Child("test.png");
-
-        Task task = island_ref.GetFileAsync(local_url, new StorageProgress<DownloadState>((DownloadState state) =>
-        {
-            Debug.Log(string.Format("Progress: {0} of {1} bytes transferred", state.BytesTransferred, state.TotalByteCount));
-        }), CancellationToken.None);
-
-        task.ContinueWith(resultTask =>
-        {
-            if (!resultTask.IsFaulted && !resultTask.IsCanceled)
-                Debug.Log("OK");
-        });
-    }
-
-    public void OnClickFileUpload()
-    {
-        string local_url = "c:\\Users\\secur\\Downloads\\dARak\\cookie\\test.png";
-
-        FirebaseStorage storage = FirebaseStorage.DefaultInstance;
-        StorageReference storageRef = storage.GetReferenceFromUrl("gs://decisive-sylph-308301.appspot.com");
-        StorageReference default_ref = storageRef.Child("test2.png");
-
-        default_ref.PutFileAsync(local_url).ContinueWith(task =>
-        {
-            if (task.IsFaulted || task.IsCanceled)
-                Debug.Log("ERR");
-            else
-            {
-                StorageMetadata metadata = task.Result;
-                Debug.Log("OK");
-            }
-        });
-    }
-
     public void UpdateBtn()
     {
         timeline_client_to_server();
+    }
+
+    public void LikeBtn(string timeline_snapshot_like)
+    {
+        Debug.Log(timeline_snapshot_like);
+        if(timeline_snapshot_like == "True")
+            likeSnapshot_client_to_server("delete");
+        else if(timeline_snapshot_like == "False")
+            likeSnapshot_client_to_server("add");
+    }
+
+    public void likeSnapshot_client_to_server(string like_type)
+    {
+        GameObject current = EventSystem.current.currentSelectedGameObject;
+        LikeSnapshot_client_to_server likeSnapshot = new LikeSnapshot_client_to_server();
+        likeSnapshot.type = like_type;
+        likeSnapshot.from_uid = socketpp.player_uid;
+        likeSnapshot.to_uid = current.transform.parent.GetComponent<PrefabUid>().uid;
+        likeSnapshot.timestamp = current.transform.parent.GetComponent<SnapshotUid>().snapshot_uid;
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(likeSnapshot));
+        LikeSnapshot_server_to_client likeSnapshotResult = JsonUtility.FromJson<LikeSnapshot_server_to_client>(socketpp.receiveMsg);
+        if(likeSnapshotResult.action == "ok")
+        {
+            Debug.Log("success");
+            if(like_type == "add")
+            {
+                current.transform.parent.GetComponent<SnapshotUid>().snapshot_like++;
+                current.GetComponent<Button>().onClick.RemoveAllListeners();
+                current.GetComponent<Button>().onClick.AddListener(() => LikeBtn("True"));
+                current.GetComponent<Image>().color = new Color(200, 200 / 255, 200 / 255);
+            }
+            else if(like_type == "delete")
+            {
+                current.transform.parent.GetComponent<SnapshotUid>().snapshot_like--;
+                current.GetComponent<Button>().onClick.RemoveAllListeners();
+                current.GetComponent<Button>().onClick.AddListener(() => LikeBtn("False"));
+                current.GetComponent<Image>().color = new Color(30 / 255, 225 / 255, 200 / 255);
+            }
+        }
     }
 
     public void timeline_client_to_server()
@@ -99,28 +72,26 @@ public class Timeline : MonoBehaviour
         timeline.uid = socketpp.player_uid;
         timeline.count = snapshot_count;
         socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(timeline));
-        Timeline_server_to_client snapshot = JsonUtility.FromJson<Timeline_server_to_client>(socketpp.receiveMsg);
+        Timeline_server_to_client timeline_snapshot = JsonUtility.FromJson<Timeline_server_to_client>(socketpp.receiveMsg);
         snapshot_count++;
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 4; i++)
         {
-            MakeClone(snapshot.info[i].uid, snapshot.info[i].nickname, snapshot.info[i].timestamp, snapshot.info[i].snapshot_intro, snapshot.info[i].like);
+            MakeClone(timeline_snapshot.info[i].uid, timeline_snapshot.info[i].nickname, timeline_snapshot.info[i].like_num, timeline_snapshot.info[i].timestamp, timeline_snapshot.info[i].snapshot_intro, timeline_snapshot.info[i].like);
         }
-        //localDown();
-        OnClickFileUpload();
     }
 
-    public void MakeClone(int snapshot_user_uid, string snapshot_nickname, string snapshot_timestamp, string snapshot_text, string snapshot_like)
+    public void MakeClone(int timeline_snapshot_user_uid, string timeline_snapshot_nickname, int timeline_snapshot_like_num, string timeline_snapshot_timestamp, string timeline_snapshot_text, string timeline_snapshot_like)
     {
         GameObject clone_snapshot = Instantiate(snapshot) as GameObject;
         clone_snapshot.transform.SetParent(this.transform);
         clone_snapshot.transform.localPosition = Vector3.zero;
         clone_snapshot.transform.localScale = Vector3.one;
 
-        clone_snapshot.GetComponent<PrefabUid>().uid = snapshot_user_uid;
-        clone_snapshot.GetComponent<PrefabUid>().nickname = snapshot_nickname;
-        clone_snapshot.GetComponent<SnapshotUid>().snapshot_uid = snapshot_timestamp;
-        clone_snapshot.GetComponent<SnapshotUid>().snapshot_intro = snapshot_text;
-        clone_snapshot.GetComponent<SnapshotUid>().snapshot_like = snapshot_like;
+        clone_snapshot.GetComponent<PrefabUid>().uid = timeline_snapshot_user_uid;
+        clone_snapshot.GetComponent<PrefabUid>().nickname = timeline_snapshot_nickname;
+        clone_snapshot.GetComponent<SnapshotUid>().snapshot_uid = timeline_snapshot_timestamp;
+        clone_snapshot.GetComponent<SnapshotUid>().snapshot_intro = timeline_snapshot_text;
+        clone_snapshot.GetComponent<SnapshotUid>().snapshot_like = timeline_snapshot_like_num;
 
         GameObject clone_snapshot_profile = clone_snapshot.transform.Find("ProfileImage").gameObject;
         clone_snapshot_profile.GetComponent<Button>().onClick.AddListener(() => GameObject.Find("View_Main").GetComponent<MainSceneScript>().ActiveFriendPage());
@@ -131,6 +102,16 @@ public class Timeline : MonoBehaviour
         //GameObject snapshot_image = clone_snapshot.transform.Find("SnapshotImage").gameObject;
         //snapshot_image.GetComponent<Image>().sprite = Resources.Load<Sprite>("");
         GameObject clone_snapshot_text = clone_snapshot.transform.Find("ProfileText").gameObject;
-        clone_snapshot_text.GetComponent<Text>().text = snapshot_nickname;
+        clone_snapshot_text.GetComponent<Text>().text = timeline_snapshot_nickname;
+        GameObject clone_snapshot_likebtn = clone_snapshot.transform.Find("SnapshotLikeButton").gameObject;
+        clone_snapshot_likebtn.GetComponent<Button>().onClick.AddListener(() => LikeBtn(timeline_snapshot_like));
+        if(timeline_snapshot_like == "True")
+        {
+            clone_snapshot_likebtn.GetComponent<Image>().color = new Color(200, 200 / 255, 200 / 255);
+        }
+        else if(timeline_snapshot_like == "False")
+        {
+            clone_snapshot_likebtn.GetComponent<Image>().color = new Color(30 / 255, 225 / 255, 200 / 255);
+        }
     }
 }

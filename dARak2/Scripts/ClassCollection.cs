@@ -24,7 +24,7 @@ public class Profile_img_request
     public string action = "profile_img_request";
     public int uid;
 }
-//Login Scene
+//Login SignUp Scene
 [System.Serializable]
 public class Signup_client_to_server
 {
@@ -34,14 +34,27 @@ public class Signup_client_to_server
     public string nickname;
     public string email;
 }
+[System.Serializable]
+public class Signup_server_to_client
+{
+    public string action;
+}
 
+//Login Auth Scene
 [System.Serializable]
 public class Auth_client_to_server
 {
     public string action = "email auth";
     public int auth;
 }
+[System.Serializable]
+public class Auth_server_to_client
+{
+    public string action = "email auth";
+    public string auth;
+}
 
+//Login Scene
 [System.Serializable]
 public class Login_client_to_server
 {
@@ -58,6 +71,7 @@ public class Login_server_to_client
     public int uid;
 }
 
+//Login Find and Modify Scene
 [System.Serializable]
 public class FindId_client_to_server
 {
@@ -78,11 +92,12 @@ public class ModifyPw_client_to_server
     public string email;
 }
 [System.Serializable]
-public class ModifyPw_server_to_client;
+public class ModifyPw_server_to_client
 {
     public string action = "modify_pw";
     public string result;
 }
+
 
 //TimelineScene
 [System.Serializable]
@@ -107,7 +122,8 @@ public class Info
 {
     public int uid;
     public string nickname;
-    public string like;
+    public string like; //내가 스냅샷에 좋아요 한 여부
+    public int like_num;
     public string timestamp;
     public string snapshot_intro;
 }
@@ -283,14 +299,7 @@ public class Album_client_to_server
 public class Album_server_to_client
 {
     public string action = "snapshot_album";
-    public AlbumSnapshot[] albumsnapshot;
-}
-[System.Serializable]
-public class AlbumSnapshot
-{
-    public string snapshot_intro;
-    public int like_num;
-    public string timestamp;
+    public Snapshot[] snapshot;
 }
 
 //Edit Scnene
@@ -344,9 +353,14 @@ public class DeleteSnapshotDescription_client_to_server
 public class LikeSnapshot_client_to_server
 {
     public string action = "snapshot_like";
+    public string type;
     public int from_uid;
     public int to_uid;
     public string timestamp;
+}
+public class LikeSnapshot_server_to_client
+{
+    public string action;
 }
 
 

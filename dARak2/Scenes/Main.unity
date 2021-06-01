@@ -2531,6 +2531,8 @@ GameObject:
   - component: {fileID: 170713430}
   - component: {fileID: 170713429}
   - component: {fileID: 170713431}
+  - component: {fileID: 170713433}
+  - component: {fileID: 170713432}
   m_Layer: 5
   m_Name: MyPagePannel_SnapshotsImage
   m_TagString: Untagged
@@ -2648,6 +2650,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &170713432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170713427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1742114c17688b4da90b39d005ee106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  snapshot_uid: 
+  snapshot_intro: 
+  snapshot_like: 0
+--- !u!114 &170713433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170713427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e57e2669dcf33b540a7d823830521531, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uid: 0
+  nickname: 
 --- !u!1 &175004682
 GameObject:
   m_ObjectHideFlags: 0
@@ -4496,7 +4527,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1501435804}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99990845
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5143,8 +5174,8 @@ RectTransform:
   - {fileID: 646900624}
   - {fileID: 1527312881}
   - {fileID: 1617841077}
-  - {fileID: 1361331046}
   - {fileID: 1611748165}
+  - {fileID: 1361331046}
   - {fileID: 1810997675}
   - {fileID: 1869403261}
   - {fileID: 523246664}
@@ -8278,7 +8309,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00001323718}
+  m_AnchoredPosition: {x: 0, y: 0.00006429407}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &833153266
@@ -12336,7 +12367,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00008773804, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1257464391
@@ -12963,8 +12994,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1018926752}
   m_HandleRect: {fileID: 1018926751}
   m_Direction: 2
-  m_Value: 0.99899673
-  m_Size: 0.9541144
+  m_Value: 0.99999857
+  m_Size: 0.9541145
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13628,7 +13659,7 @@ RectTransform:
   m_Children:
   - {fileID: 6575}
   m_Father: {fileID: 468531638}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -16428,7 +16459,7 @@ RectTransform:
   - {fileID: 679176411}
   - {fileID: 192731604}
   m_Father: {fileID: 468531638}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -21249,7 +21280,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.08441925}
+  m_AnchoredPosition: {x: 0, y: 0.00006866455}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2060126506
@@ -21308,7 +21339,7 @@ MonoBehaviour:
   ProfilewallpaperImage: {fileID: 948086041}
   ProfileFollower: {fileID: 765775324}
   ProfileText: {fileID: 763219287}
-  SnapshotsImage: {fileID: 175004682}
+  SnapshotsImage: {fileID: 170713427}
   post: {fileID: 8538363241356388879, guid: 769453aec1894034d8792a5a2e03c94e, type: 3}
   PostInputField: {fileID: 847914088}
   visitbook_count: 0
@@ -21692,7 +21723,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 95359739}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.3333333
+  m_Size: 0.33333334
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

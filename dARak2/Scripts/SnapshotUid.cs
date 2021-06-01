@@ -6,7 +6,7 @@ public class SnapshotUid : MonoBehaviour
 {
     public string snapshot_uid;
     public string snapshot_intro;
-    public string snapshot_like;
+    public int snapshot_like;
 
     // Start is called before the first frame update
     void Start()

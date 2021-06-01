@@ -25,6 +25,6 @@ public class AlbumSnapshotScript : MonoBehaviour
         //스냅샷 이미지 추가 필요
         SnapshotDate.GetComponent<Text>().text = socketpp.snapshot_timestamp;
         SnapshotText.GetComponent<Text>().text = socketpp.snapshot_intro;
-        //SnapshotLike.GetComponent<Text>().text = socketpp.snapshot_like;
+        SnapshotLike.GetComponent<Text>().text = socketpp.snapshot_like.ToString();
     }
 }

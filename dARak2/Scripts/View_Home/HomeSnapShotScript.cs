@@ -30,7 +30,7 @@ public class HomeSnapShotScript : MonoBehaviour
         //이미지 관련 추가 필요
         ProfileName.GetComponent<Text>().text = socketpp.other_nickname;
         ProfileText.GetComponent<Text>().text = socketpp.snapshot_intro;
-        //ProfileLike.GetComponent<Text>().text = socketpp.snapshot_like.ToString();
+        ProfileLike.GetComponent<Text>().text = socketpp.snapshot_like.ToString();
     }
 
     public void ARRealBtn()

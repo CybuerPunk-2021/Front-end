@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class AlbumScript : MonoBehaviour
 {
     public GameObject albumImage;
-    private int snapshot_count = 0;
     Socketpp socketpp;
 
     // Start is called before the first frame update
@@ -35,31 +34,28 @@ public class AlbumScript : MonoBehaviour
         {
             Destroy(albumsnapshot);
         }
-        snapshot_count = 0;
     }
     public void album_client_to_server()
     {
-        Timeline_client_to_server album = new Timeline_client_to_server();
+        Album_client_to_server album = new Album_client_to_server();
         album.uid = socketpp.player_uid;
-        album.count = snapshot_count;
         socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(album));
-        Timeline_server_to_client snapshot = JsonUtility.FromJson<Timeline_server_to_client>(socketpp.receiveMsg);
+        Album_server_to_client album_snapshot = JsonUtility.FromJson<Album_server_to_client>(socketpp.receiveMsg);
         for (int i = 0; i < 50; i++)
         {
-            MakeClone(snapshot.info[i].uid, snapshot.info[i].nickname, snapshot.info[i].timestamp, snapshot.info[i].snapshot_intro, snapshot.info[i].like);
+            MakeClone(album_snapshot.snapshot[i].snapshot_intro, album_snapshot.snapshot[i].like_num, album_snapshot.snapshot[i].timestamp);
         }
-        snapshot_count++;
     }
 
-    public void MakeClone(int snapshot_user_uid, string snapshot_nickname, string snapshot_timestamp, string snapshot_text, string snapshot_like)
+    public void MakeClone(string snapshot_text, int snapshot_like, string snapshot_timestamp)
     {
         GameObject clone_albumImage = Instantiate(albumImage) as GameObject;
         clone_albumImage.transform.SetParent(this.transform);
         clone_albumImage.transform.localPosition = Vector3.zero;
         clone_albumImage.transform.localScale = Vector3.one;
 
-        clone_albumImage.GetComponent<PrefabUid>().uid = snapshot_user_uid;
-        clone_albumImage.GetComponent<PrefabUid>().nickname = snapshot_nickname;
+        clone_albumImage.GetComponent<PrefabUid>().uid = socketpp.player_uid;
+        clone_albumImage.GetComponent<PrefabUid>().nickname = socketpp.player_nickname;
         clone_albumImage.GetComponent<SnapshotUid>().snapshot_uid = snapshot_timestamp;
         clone_albumImage.GetComponent<SnapshotUid>().snapshot_intro = snapshot_text;
         clone_albumImage.GetComponent<SnapshotUid>().snapshot_like = snapshot_like;

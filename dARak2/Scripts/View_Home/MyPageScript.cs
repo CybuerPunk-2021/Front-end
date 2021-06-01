@@ -15,12 +15,21 @@ public class MyPageScript : MonoBehaviour
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
         profile_client_to_server();
+        miniSnapshot_client_to_server();
         loadvisitbook_client_to_server();
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public void updateMyPage()
+    {
+        profile_client_to_server();
+        miniSnapshot_client_to_server();
+        ErasePost();
+        loadvisitbook_client_to_server();
     }
 
     public void profile_client_to_server()
@@ -34,6 +43,20 @@ public class MyPageScript : MonoBehaviour
         ProfileText.GetComponent<Text>().text = myProfile.self_intro;
         //SnapshotsImage.GetComponent<Image>().sprite = myProfile.snapshot_Info; //이미지 부분
     }
+
+    public void miniSnapshot_client_to_server()
+    {
+        Album_client_to_server miniSnapshot = new Album_client_to_server();
+        miniSnapshot.uid = socketpp.player_uid;
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(miniSnapshot));
+        Album_server_to_client miniSnapshot_one = JsonUtility.FromJson<Album_server_to_client>(socketpp.receiveMsg);
+        SnapshotsImage.GetComponent<PrefabUid>().uid = socketpp.player_uid;
+        SnapshotsImage.GetComponent<PrefabUid>().nickname = socketpp.player_nickname;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_uid = miniSnapshot_one.snapshot[0].timestamp;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_intro = miniSnapshot_one.snapshot[0].snapshot_intro;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_like = miniSnapshot_one.snapshot[0].like_num;
+    }
+
     public void UpdatePostBtn()
     {
         loadvisitbook_client_to_server();

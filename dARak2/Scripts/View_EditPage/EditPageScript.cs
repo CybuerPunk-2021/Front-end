@@ -37,6 +37,7 @@ public class EditPageScript : MonoBehaviour
         changename.uid = socketpp.player_uid;
         changename.nickname = profileNameField.text;
         socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(changename));
+        socketpp.player_nickname = changename.nickname;
     }
     
     public void ChangeEmail()

@@ -76,7 +76,7 @@ public class MainSceneScript : MonoBehaviour
     public void UnActiveEditPage()
     {
         View_EditPage.SetActive(false);
-        GameObject.Find("MyPagePannel_Content").GetComponent<MyPageScript>().profile_client_to_server();
+        GameObject.Find("MyPagePannel_Content").GetComponent<MyPageScript>().updateMyPage();
     }
 
     //Edit Snapshot
@@ -164,7 +164,7 @@ public class MainSceneScript : MonoBehaviour
         socketpp.other_nickname = current.transform.parent.GetComponent<PrefabUid>().nickname;
         socketpp.snapshot_timestamp = current.transform.parent.GetComponent<SnapshotUid>().snapshot_uid;
         socketpp.snapshot_intro = current.transform.parent.GetComponent<SnapshotUid>().snapshot_intro;
-        //socketpp.snapshot_like = int.Parse(current.transform.parent.GetComponent<SnapshotUid>().snapshot_like);
+        socketpp.snapshot_like = current.transform.parent.GetComponent<SnapshotUid>().snapshot_like;
 
         View_HomeSnapshot.SetActive(true);
         GameObject.Find("View_HomeSnapshot_Panel").GetComponent<HomeSnapShotScript>().snapshot_client_to_server();
@@ -180,7 +180,7 @@ public class MainSceneScript : MonoBehaviour
         GameObject current = EventSystem.current.currentSelectedGameObject;
         socketpp.snapshot_timestamp = current.transform.GetComponent<SnapshotUid>().snapshot_uid;
         socketpp.snapshot_intro = current.transform.GetComponent<SnapshotUid>().snapshot_intro;
-        //socketpp.snapshot_like = int.Parse(current.transform.parent.GetComponent<SnapshotUid>().snapshot_like);
+        socketpp.snapshot_like = current.transform.GetComponent<SnapshotUid>().snapshot_like;
 
         View_AlbumSnapshot.SetActive(true);
         GameObject.Find("View_AlbumSnapshot_Panel").GetComponent<AlbumSnapshotScript>().album_snapshot_client_to_server();
