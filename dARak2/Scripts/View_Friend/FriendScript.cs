@@ -9,15 +9,15 @@ public class FriendScript : MonoBehaviour
     public GameObject Following;
     public Slider friendSlider;
     Socketpp socketpp;
-    public void Start()
+    public void Awake()
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
     }
     public void followadd_client_to_server()
     {
         Followadd_client_to_server follow = new Followadd_client_to_server();
-        follow.from_uid = socketpp.player_uid;
         GameObject current = EventSystem.current.currentSelectedGameObject;
+        follow.from_uid = socketpp.player_uid;
         follow.to_uid = current.transform.parent.GetComponent<PrefabUid>().uid;
         socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(follow));
         GameObject.Find("View_Follower_Content").GetComponent<FollowerScript>().UpdateFollower();
@@ -38,7 +38,6 @@ public class FriendScript : MonoBehaviour
         friendSlider.value = 0;
         Following.SetActive(false);
         Follower.SetActive(true);
-        GameObject.Find("View_Follower_Content").GetComponent<FollowerScript>().UpdateFollower();
     }
 
     public void ActiveFollowing()
@@ -46,6 +45,5 @@ public class FriendScript : MonoBehaviour
         friendSlider.value = 1;
         Following.SetActive(true);
         Follower.SetActive(false);
-        GameObject.Find("View_Following_Content").GetComponent<FollowingScript>().UpdateFollowing();
     }
 }

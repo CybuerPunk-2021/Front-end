@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using System.IO;
 public class Timeline : MonoBehaviour
 {
     public GameObject snapshot;
@@ -12,19 +12,36 @@ public class Timeline : MonoBehaviour
     Socketpp socketpp;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
         timeline_client_to_server();
     }
-    // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
+        //EraseTimeline();
+        //timeline_client_to_server();
+    }
+
+    public void TimelineReload()
+    {
+        EraseTimeline();
+        timeline_client_to_server();
     }
 
     public void UpdateBtn()
     {
         timeline_client_to_server();
+    }
+
+    public void EraseTimeline()
+    {
+        GameObject[] timelineSnapshots = GameObject.FindGameObjectsWithTag("Snapshot");
+        foreach (GameObject timelineSnapshot in timelineSnapshots)
+        {
+            Destroy(timelineSnapshot);
+        }
+        snapshot_count = 0;
     }
 
     public void LikeBtn(string timeline_snapshot_like)
@@ -82,6 +99,8 @@ public class Timeline : MonoBehaviour
 
     public void MakeClone(int timeline_snapshot_user_uid, string timeline_snapshot_nickname, int timeline_snapshot_like_num, string timeline_snapshot_timestamp, string timeline_snapshot_text, string timeline_snapshot_like)
     {
+        if (!Directory.Exists(Application.persistentDataPath + "/" + timeline_snapshot_user_uid.ToString()))
+            Directory.CreateDirectory(Application.persistentDataPath + "/" + timeline_snapshot_user_uid.ToString() + "/");
         GameObject clone_snapshot = Instantiate(snapshot) as GameObject;
         clone_snapshot.transform.SetParent(this.transform);
         clone_snapshot.transform.localPosition = Vector3.zero;
@@ -95,14 +114,44 @@ public class Timeline : MonoBehaviour
 
         GameObject clone_snapshot_profile = clone_snapshot.transform.Find("ProfileImage").gameObject;
         clone_snapshot_profile.GetComponent<Button>().onClick.AddListener(() => GameObject.Find("View_Main").GetComponent<MainSceneScript>().ActiveFriendPage());
-        //GameObject profile_image = clone_snapshot.transform.Find("ProfileImage").gameObject;
-        //profile_image.GetComponent<Image>().sprite = Resources.Load<Sprite>("");
+
+        CheckProfileImage_client_to_server checkprofile = new CheckProfileImage_client_to_server();
+        checkprofile.uid = timeline_snapshot_user_uid;
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(checkprofile));
+        CheckProfileImage_server_to_client checkprofiletime = JsonUtility.FromJson<CheckProfileImage_server_to_client>(socketpp.receiveMsg);
+        string profile_path = timeline_snapshot_user_uid.ToString() + "/" + timeline_snapshot_user_uid.ToString() + "_" + checkprofiletime.timestamp + ".png";
+        if (!File.Exists(Application.persistentDataPath + "/" + profile_path))
+        {
+            socketpp.localDown(profile_path);
+            Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+            iq.img = clone_snapshot_profile.GetComponent<Image>();
+            iq.path = Application.persistentDataPath + "/" + profile_path;
+            socketpp._imgqueue.Add(iq);
+        }
+        else
+        {
+            clone_snapshot_profile.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + profile_path);
+        }
+
         GameObject clone_snapshot_snapshot = clone_snapshot.transform.Find("SnapshotImage").gameObject;
         clone_snapshot_snapshot.GetComponent<Button>().onClick.AddListener(() => GameObject.Find("View_Main").GetComponent<MainSceneScript>().OnSnapshotScene());
-        //GameObject snapshot_image = clone_snapshot.transform.Find("SnapshotImage").gameObject;
-        //snapshot_image.GetComponent<Image>().sprite = Resources.Load<Sprite>("");
+        string path = timeline_snapshot_user_uid.ToString() + "/" + timeline_snapshot_user_uid.ToString() + "_" + timeline_snapshot_timestamp + ".png";
+        if (!File.Exists(Application.persistentDataPath + "/" + path))
+        {
+            socketpp.localDown(path);
+            Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+            iq.img = clone_snapshot_snapshot.GetComponent<Image>();
+            iq.path = Application.persistentDataPath + "/" + path;
+            socketpp._imgqueue.Add(iq);
+        }
+        else
+        {
+            clone_snapshot_snapshot.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + path);
+        }
         GameObject clone_snapshot_text = clone_snapshot.transform.Find("ProfileText").gameObject;
         clone_snapshot_text.GetComponent<Text>().text = timeline_snapshot_nickname;
+        GameObject clone_snapshot_time = clone_snapshot.transform.Find("SnapshotTime").gameObject;
+        clone_snapshot_time.GetComponent<Text>().text = GameObject.Find("View_Main").GetComponent<MainSceneScript>().ParseDateTime(timeline_snapshot_timestamp);
         GameObject clone_snapshot_likebtn = clone_snapshot.transform.Find("SnapshotLikeButton").gameObject;
         clone_snapshot_likebtn.GetComponent<Button>().onClick.AddListener(() => LikeBtn(timeline_snapshot_like));
         if(timeline_snapshot_like == "True")

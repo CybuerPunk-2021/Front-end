@@ -2,23 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 public class FollowingScript : MonoBehaviour
 {
     public GameObject friend;
     Socketpp socketpp;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
-        followingscene_client_to_server();
     }
-
-    // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
+        UpdateFollowing();
     }
-
     public void UpdateFollowing()
     {
         GameObject[] followings = GameObject.FindGameObjectsWithTag("Following");
@@ -43,6 +41,8 @@ public class FollowingScript : MonoBehaviour
 
     public void MakeFollowing(int following_uid, string following_nickname)
     {
+        if (!Directory.Exists(Application.persistentDataPath + "/" + following_uid.ToString()))
+            Directory.CreateDirectory(Application.persistentDataPath + "/" + following_uid.ToString() + "/");
         GameObject clone_following_friend = Instantiate(friend) as GameObject;
         clone_following_friend.transform.SetParent(this.transform);
         clone_following_friend.transform.localPosition = Vector3.zero;
@@ -55,7 +55,25 @@ public class FollowingScript : MonoBehaviour
         clone_following_friend_deletebutton.GetComponent<Button>().onClick.AddListener(() => GameObject.Find("View_Friend").GetComponent<FriendScript>().followdelete_client_to_server());
         GameObject clone_following_text = clone_following_friend.transform.Find("FollowingName").gameObject;
         clone_following_text.GetComponent<Text>().text = following_nickname;
-        //GameObject clone_following_image = clone_snapshot.transform.Find("FollowingImage").gameObject;
-        //clone_following_image.GetComponent<Image>().sprite = Resources.Load<Sprite>("");
+
+        CheckProfileImage_client_to_server checkprofile = new CheckProfileImage_client_to_server();
+        checkprofile.uid = following_uid;
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(checkprofile));
+        CheckProfileImage_server_to_client checkprofiletime = JsonUtility.FromJson<CheckProfileImage_server_to_client>(socketpp.receiveMsg);
+
+        string path = following_uid.ToString() + "/" + following_uid.ToString() + "_" + checkprofiletime.timestamp + ".png";
+        GameObject clone_following_image = clone_following_friend.transform.Find("FollowingImage").gameObject;
+        if (!File.Exists(Application.persistentDataPath + "/" + path))
+        {
+            socketpp.localDown(path);
+            Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+            iq.img = clone_following_image.GetComponent<Image>();
+            iq.path = Application.persistentDataPath + "/" + path;
+            socketpp._imgqueue.Add(iq);
+        }
+        else
+        {
+            clone_following_image.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + path);
+        }
     }
 }

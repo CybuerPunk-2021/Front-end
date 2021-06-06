@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
 public class LoginSceneScript : MonoBehaviour
 {
     public GameObject LoginPanel;
@@ -23,7 +22,7 @@ public class LoginSceneScript : MonoBehaviour
     Socketpp socketpp;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
     }
@@ -31,7 +30,13 @@ public class LoginSceneScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+        }
     }
 
     public void login_client_to_server()
@@ -46,6 +51,7 @@ public class LoginSceneScript : MonoBehaviour
         {
             socketpp.player_nickname = player.nickname;
             socketpp.player_uid = player.uid;
+            socketpp.player_recent_timestamp = player.timestamp;
             ActiveMainScene();
         }
     }

@@ -68,6 +68,7 @@ public class Login_server_to_client
 {
     public string action;
     public string nickname;
+    public string timestamp;
     public int uid;
 }
 
@@ -273,6 +274,7 @@ public class Followdelete_client_to_server
 public class Search_client_to_server
 {
     public string action = "search";
+    public int uid;
     public string query;
 }
 [System.Serializable]
@@ -286,6 +288,7 @@ public class Result
 {
     public int uid;
     public string nickname;
+    public string isfollow;
 }
 
 //Album Scene
@@ -294,6 +297,7 @@ public class Album_client_to_server
 {
     public string action = "snapshot_album";
     public int uid;
+    public int count;
 }
 [System.Serializable]
 public class Album_server_to_client
@@ -340,12 +344,59 @@ public class ChangeSnapshotDescription_client_to_server
     public string timestamp;
     public string introduce;
 }
-
 [System.Serializable]
 public class DeleteSnapshotDescription_client_to_server
 {
     public string action = "snapshot_del";
     public int uid;
+    public string timestamp;
+}
+[System.Serializable]
+public class ChangeProfileImage_client_to_server
+{
+    public string action = "chg_profile_img";
+    public int uid;
+}
+[System.Serializable]
+public class ChangeProfileImage_server_to_client
+{
+    public string action = "chg_profile_img";
+    public string timestamp;
+}
+[System.Serializable]
+public class CheckProfileImage_client_to_server
+{
+    public string action = "chk_profile_img";
+    public int uid;
+}
+[System.Serializable]
+public class CheckProfileImage_server_to_client
+{
+    public string action = "chk_profile_img";
+    public string timestamp;
+}
+[System.Serializable]
+public class ChangeBackgroundImage_client_to_server
+{
+    public string action = "chg_bg_img";
+    public int uid;
+}
+[System.Serializable]
+public class ChangeBackgroundImage_server_to_client
+{
+    public string action = "chg_bg_img";
+    public string timestamp;
+}
+[System.Serializable]
+public class CheckBackgroundImage_client_to_server
+{
+    public string action = "chk_bg_img";
+    public int uid;
+}
+[System.Serializable]
+public class CheckBackgroundImage_server_to_client
+{
+    public string action = "chk_bg_img";
     public string timestamp;
 }
 
@@ -358,6 +409,7 @@ public class LikeSnapshot_client_to_server
     public int to_uid;
     public string timestamp;
 }
+[System.Serializable]
 public class LikeSnapshot_server_to_client
 {
     public string action;

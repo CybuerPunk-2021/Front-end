@@ -9,18 +9,11 @@ public class EditSnapshotScript : MonoBehaviour
     Socketpp socketpp;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void UpdateText()
+    void OnEnable()
     {
         snapshotTextField.text = socketpp.snapshot_intro;
     }

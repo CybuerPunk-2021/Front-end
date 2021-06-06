@@ -77,7 +77,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: "\uC218\uC815\uD558\uAE30"
 --- !u!1 &6299779456760471595
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +265,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 53ccf349ba9d3c14d8a1dd5c4f218f6f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -357,4 +357,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snapshot_uid: 
   snapshot_intro: 
-  snapshot_like: 
+  snapshot_like: 0

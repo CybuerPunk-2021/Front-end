@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.IO;
 public class FriendPageScript : MonoBehaviour
 {
     public GameObject ProfileImage, ProfileName, ProfilewallpaperImage, ProfileFollower, ProfileText, SnapshotsImage;
@@ -11,42 +11,136 @@ public class FriendPageScript : MonoBehaviour
     public int visitbook_count = 0;
     Socketpp socketpp;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         socketpp = GameObject.Find("Socket").GetComponent<Socketpp>();
+    }
+    void OnEnable()
+    {
+        ErasePost();
         profile_client_to_server();
-        miniSnapshot_client_to_server();
         loadvisitbook_client_to_server();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void reloadFriendPage()
     {
+        ErasePost();
+        profile_client_to_server();
+        loadvisitbook_client_to_server();
     }
 
     public void profile_client_to_server()
     {
         Profile_client_to_server profile = new Profile_client_to_server();
         profile.uid = socketpp.other_player_uid;
+        if (!Directory.Exists(Application.persistentDataPath + "/" + socketpp.other_player_uid.ToString()))
+            Directory.CreateDirectory(Application.persistentDataPath + "/" + socketpp.other_player_uid.ToString() + "/");
         socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(profile));
         Profile_server_to_client myProfile = JsonUtility.FromJson<Profile_server_to_client>(socketpp.receiveMsg);
         ProfileName.GetComponent<Text>().text = socketpp.other_nickname;
         ProfileFollower.GetComponent<Text>().text = myProfile.follower.ToString();
         ProfileText.GetComponent<Text>().text = myProfile.self_intro;
-        //SnapshotsImage.GetComponent<Image>().sprite = myProfile.snapshot_Info; //이미지 부분
-    }
+        if (myProfile.snapshot_info.timestamp != "")
+        {
+            SnapshotsImage.SetActive(true);
+            string path = socketpp.other_player_uid.ToString() + "/" + socketpp.other_player_uid.ToString() + "_" + myProfile.snapshot_info.timestamp + ".png";
+            if (!File.Exists(Application.persistentDataPath + "/" + path))
+            {
+                socketpp.localDown(path);
+                Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+                iq.img = SnapshotsImage.GetComponent<Image>();
+                iq.path = Application.persistentDataPath + "/" + path;
+                socketpp._imgqueue.Add(iq);
+            }
+            else
+            {
+                SnapshotsImage.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + path);
+            }
+        }
+        else if (myProfile.snapshot_info.timestamp == "")
+        {
+            SnapshotsImage.SetActive(false);
+        }
 
-    public void miniSnapshot_client_to_server()
-    {
-        Album_client_to_server miniSnapshot = new Album_client_to_server();
-        miniSnapshot.uid = socketpp.other_player_uid;
-        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(miniSnapshot));
-        Album_server_to_client miniSnapshot_one = JsonUtility.FromJson<Album_server_to_client>(socketpp.receiveMsg);
+        CheckProfileImage_client_to_server checkprofile = new CheckProfileImage_client_to_server();
+        checkprofile.uid = socketpp.other_player_uid;
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(checkprofile));
+        CheckProfileImage_server_to_client checkprofiletime = JsonUtility.FromJson<CheckProfileImage_server_to_client>(socketpp.receiveMsg);
+        if (checkprofiletime.timestamp != "")
+        {
+            string profile_path = socketpp.other_player_uid.ToString() + "/" + socketpp.other_player_uid.ToString() + "_" + checkprofiletime.timestamp + ".png";
+            if (!File.Exists(Application.persistentDataPath + "/" + profile_path))
+            {
+                socketpp.localDown(profile_path);
+                Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+                iq.img = ProfileImage.GetComponent<Image>();
+                iq.path = Application.persistentDataPath + "/" + profile_path;
+                socketpp._imgqueue.Add(iq);
+            }
+            else
+            {
+                ProfileImage.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + profile_path);
+            }
+        }
+        else if (checkprofiletime.timestamp == "")
+        {
+            string profile_path = "profile_default.png";
+            if (!File.Exists(Application.persistentDataPath + "/" + profile_path))
+            {
+                socketpp.localDown(profile_path);
+                Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+                iq.img = ProfileImage.GetComponent<Image>();
+                iq.path = Application.persistentDataPath + "/" + profile_path;
+                socketpp._imgqueue.Add(iq);
+            }
+            else
+            {
+                ProfileImage.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + profile_path);
+            }
+        }
+
+        CheckBackgroundImage_client_to_server checkbg = new CheckBackgroundImage_client_to_server();
+        checkbg.uid = socketpp.other_player_uid;
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(checkbg));
+        CheckBackgroundImage_server_to_client checkbgtime = JsonUtility.FromJson<CheckBackgroundImage_server_to_client>(socketpp.receiveMsg);
+        if (checkbgtime.timestamp != "")
+        {
+            string bg_path = socketpp.other_player_uid.ToString() + "/" + socketpp.other_player_uid.ToString() + "_" + checkbgtime.timestamp + ".png";
+            if (!File.Exists(Application.persistentDataPath + "/" + bg_path))
+            {
+                socketpp.localDown(bg_path);
+                Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+                iq.img = ProfilewallpaperImage.GetComponent<Image>();
+                iq.path = Application.persistentDataPath + "/" + bg_path;
+                socketpp._imgqueue.Add(iq);
+            }
+            else
+            {
+                ProfilewallpaperImage.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + bg_path);
+            }
+        }
+        else if (checkbgtime.timestamp == "")
+        {
+            string bg_path = "bg_default.jpg";
+            if (!File.Exists(Application.persistentDataPath + "/" + bg_path))
+            {
+                socketpp.localDown(bg_path);
+                Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+                iq.img = ProfilewallpaperImage.GetComponent<Image>();
+                iq.path = Application.persistentDataPath + "/" + bg_path;
+                socketpp._imgqueue.Add(iq);
+            }
+            else
+            {
+                ProfilewallpaperImage.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + bg_path);
+            }
+        }
+
         SnapshotsImage.GetComponent<PrefabUid>().uid = socketpp.other_player_uid;
         SnapshotsImage.GetComponent<PrefabUid>().nickname = socketpp.other_nickname;
-        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_uid = miniSnapshot_one.snapshot[0].timestamp;
-        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_intro = miniSnapshot_one.snapshot[0].snapshot_intro;
-        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_like = miniSnapshot_one.snapshot[0].like_num;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_uid = myProfile.snapshot_info.timestamp;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_intro = myProfile.snapshot_info.snapshot_intro;
+        SnapshotsImage.GetComponent<SnapshotUid>().snapshot_like = myProfile.snapshot_info.like_num;
     }
 
     public void UpdatePostBtn()
@@ -61,7 +155,7 @@ public class FriendPageScript : MonoBehaviour
     }
     public void ErasePost()
     {
-        GameObject[] posts = GameObject.FindGameObjectsWithTag("Post");
+        GameObject[] posts = GameObject.FindGameObjectsWithTag("FriendPost");
         foreach (GameObject post in posts)
         {
             Destroy(post);
@@ -85,18 +179,43 @@ public class FriendPageScript : MonoBehaviour
 
     public void MakePost(int visitbook_uid, string visitbook_nickname, string visitbook_comment, string visitbook_timestamp)
     {
+        if (!Directory.Exists(Application.persistentDataPath + "/" + visitbook_uid.ToString()))
+            Directory.CreateDirectory(Application.persistentDataPath + "/" + visitbook_uid.ToString() + "/");
         GameObject clone_post = Instantiate(post) as GameObject;
         clone_post.transform.SetParent(this.transform);
         clone_post.transform.localPosition = Vector3.zero;
         clone_post.transform.localScale = Vector3.one;
-        //GameObject post_profile_image = clone_post.transform.Find("PostImage").gameObject;
-        //post_profile_image.GetComponent<Image>().sprite = Resources.Load<Sprite>("");
+
+        clone_post.GetComponent<PrefabUid>().uid = visitbook_uid;
+        clone_post.GetComponent<PrefabUid>().nickname = visitbook_nickname;
+
+        GameObject post_profile_image = clone_post.transform.Find("PostImage").gameObject;
+        post_profile_image.GetComponent<Button>().onClick.AddListener(() => GameObject.Find("View_Main").GetComponent<MainSceneScript>().ActiveFriendPageToFriendPage());
+
+        CheckProfileImage_client_to_server checkprofile = new CheckProfileImage_client_to_server();
+        checkprofile.uid = visitbook_uid;
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(checkprofile));
+        CheckProfileImage_server_to_client checkprofiletime = JsonUtility.FromJson<CheckProfileImage_server_to_client>(socketpp.receiveMsg);
+        string path = visitbook_uid.ToString() + "/" + visitbook_uid.ToString() + "_" + checkprofiletime.timestamp + ".png";
+
+        if (!File.Exists(Application.persistentDataPath + "/" + path))
+        {
+            socketpp.localDown(path);
+            Socketpp.ImgQueue iq = new Socketpp.ImgQueue();
+            iq.img = post_profile_image.GetComponent<Image>();
+            iq.path = Application.persistentDataPath + "/" + path;
+            socketpp._imgqueue.Add(iq);
+        }
+        else
+        {
+            post_profile_image.GetComponent<Image>().sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(Application.persistentDataPath + "/" + path);
+        }
         GameObject Post_Name = clone_post.transform.Find("PostName").gameObject;
         Post_Name.GetComponent<Text>().text = visitbook_nickname;
         GameObject Post_Answer = clone_post.transform.Find("PostAnswer").gameObject;
         Post_Answer.GetComponent<Text>().text = visitbook_comment;
         GameObject Post_Timestamp = clone_post.transform.Find("PostTime").gameObject;
-        Post_Timestamp.GetComponent<Text>().text = visitbook_timestamp;
+        Post_Timestamp.GetComponent<Text>().text = GameObject.Find("View_Main").GetComponent<MainSceneScript>().ParseDateTime(visitbook_timestamp);
     }
 
     public void writevisitbook_client_to_server()
