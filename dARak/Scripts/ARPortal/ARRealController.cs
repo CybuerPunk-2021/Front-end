@@ -15,6 +15,8 @@ public class ARRealController : MonoBehaviour
     public GameObject Portal;
     public GameObject ARCamera;
     public GameObject[] furnitureList;
+    public GameObject planeGenerator;
+
     string cmd;
 
     roominfo info;
@@ -36,11 +38,16 @@ public class ARRealController : MonoBehaviour
         {
             GameObject furniturePrefab = furnitureList[info.item_list[i].iid];
             GameObject furniture = Instantiate(furniturePrefab);
-            furniture.transform.parent = GameObject.Find("Room").transform;
-            
-            furniture.transform.rotation = Quaternion.Euler(info.item_list[i].rotation[0] + 90, info.item_list[i].rotation[1], info.item_list[i].rotation[2]);
-            furniture.transform.localPosition = new Vector3(-info.item_list[i].position[0], -info.item_list[i].position[2], -info.item_list[i].position[1] - 5.5f);
+            GameObject Rot = GameObject.Find("Rot");
+            furniture.transform.parent = Rot.transform;
+
+            furniture.transform.Rotate(new Vector3(info.item_list[i].rotation[0], info.item_list[i].rotation[1], info.item_list[i].rotation[2]), Space.World);
+            furniture.transform.localPosition = new Vector3(info.item_list[i].position[0], info.item_list[i].position[1], info.item_list[i].position[2]);
             furniture.transform.localScale = new Vector3(info.item_list[i].scale[0], info.item_list[i].scale[1], info.item_list[i].scale[2]);
+
+            //Rot.transform.Rotate(new Vector3(0, 180f, 0), Space.World);
+            Rot.transform.rotation = Quaternion.Euler(new Vector3(0, 180f, 0));
+            Rot.transform.localPosition = new Vector3(0, -2f, -9f);
         }
         GameObject.Find("PortalPlane").GetComponent<PortalManager>().enabled = true;
         Portal.SetActive(false);
@@ -56,7 +63,7 @@ public class ARRealController : MonoBehaviour
 
         TrackableHit hit;
 
-        if(Frame.Raycast(touch.position.x, touch.position.y, TrackableHitFlags.PlaneWithinPolygon, out hit))
+        if(Frame.Raycast(touch.position.x, touch.position.y, TrackableHitFlags.PlaneWithinPolygon, out hit) && planeGenerator.activeSelf == true)
         { 
             
             Portal.SetActive(true);
@@ -71,14 +78,21 @@ public class ARRealController : MonoBehaviour
             Portal.transform.LookAt(cameraPosition, Portal.transform.up);
 
             Portal.transform.parent = anchor.transform;
-            
+            planeGenerator.SetActive(false);
+
             /*var anchor = hit.Trackable.CreateAnchor(hit.Pose);
             Instantiate(Portal, hit.Pose.position, hit.Pose.rotation, anchor.transform);*/
-    }
+        }
     }
 
     public void BackScene()
     {
         SceneManager.LoadScene("Main");
+    }
+
+    public void ReScene()
+    {
+        Portal.SetActive(false);
+        planeGenerator.SetActive(true);
     }
 }

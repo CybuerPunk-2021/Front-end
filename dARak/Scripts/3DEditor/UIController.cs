@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class UIController : MonoBehaviour
 {
@@ -12,10 +13,6 @@ public class UIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //closeImage = GameObject.Find("CloseBack");
-        //button[0] = GameObject.Find("LeftRotate").GetComponent<Button>();
-        //button[1] = GameObject.Find("RightRotate").GetComponent<Button>();
-        //button[2] = GameObject.Find("DeleteButton").GetComponent<Button>();
     }
 
     // Update is called once per frame
@@ -31,12 +28,13 @@ public class UIController : MonoBehaviour
 
     public void LeftRotate()
     {
-        targetObject.transform.Rotate(0, 0, 45f);
+        targetObject.transform.Rotate(0, -45f, 0, Space.World);
+
     }
 
     public void RightRotate()
     {
-        targetObject.transform.Rotate(0, 0, -45f);
+        targetObject.transform.Rotate(0, 45f, 0, Space.World);
     }
 
     public void Delete()

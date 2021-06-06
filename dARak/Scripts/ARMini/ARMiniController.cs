@@ -9,6 +9,7 @@ public class ARMiniController : MonoBehaviour
     public GameObject MiniRoom;
     public GameObject ARCamera;
     public GameObject[] furnitureList;
+    public GameObject planeGenerator;
     string cmd;
 
     roominfo info;
@@ -33,8 +34,10 @@ public class ARMiniController : MonoBehaviour
             GameObject furniturePrefab = furnitureList[info.item_list[i].iid];
             GameObject furniture = Instantiate(furniturePrefab);
             furniture.transform.parent = GameObject.Find("Rot").transform;
-            furniture.transform.rotation = Quaternion.Euler(info.item_list[i].rotation[0] + 90, info.item_list[i].rotation[1], info.item_list[i].rotation[2]);
-            furniture.transform.localPosition = new Vector3(info.item_list[i].position[0], -info.item_list[i].position[2], info.item_list[i].position[1]);
+            Debug.Log(info.item_list[i].rotation);
+            furniture.transform.Rotate(new Vector3(info.item_list[i].rotation[0], info.item_list[i].rotation[1] + 180f, info.item_list[i].rotation[2]), Space.World);
+            //furniture.transform.rotation = Quaternion.Euler(info.item_list[i].rotation[0] + 90, info.item_list[i].rotation[1], info.item_list[i].rotation[2]);
+            furniture.transform.localPosition = new Vector3(info.item_list[i].position[0], info.item_list[i].position[1], info.item_list[i].position[2]);
             furniture.transform.localScale = new Vector3(info.item_list[i].scale[0], info.item_list[i].scale[1], info.item_list[i].scale[2]);
         }
         MiniRoom.SetActive(false);
@@ -55,7 +58,7 @@ public class ARMiniController : MonoBehaviour
 
         TrackableHit hit;
 
-        if (Frame.Raycast(touch.position.x, touch.position.y, TrackableHitFlags.PlaneWithinPolygon, out hit))
+        if (Frame.Raycast(touch.position.x, touch.position.y, TrackableHitFlags.PlaneWithinPolygon, out hit) && planeGenerator.activeSelf == true)
         {
             MiniRoom.SetActive(true);
             Anchor anchor = hit.Trackable.CreateAnchor(hit.Pose);
@@ -71,6 +74,7 @@ public class ARMiniController : MonoBehaviour
             //MiniRoom.transform.eulerAngles = new Vector3(0, 180, 0);
             /*var anchor = hit.Trackable.CreateAnchor(hit.Pose);
             Instantiate(Portal, hit.Pose.position, hit.Pose.rotation, anchor.transform);*/
+            planeGenerator.SetActive(false);
         }
     }
     public void BackScene()
@@ -78,4 +82,9 @@ public class ARMiniController : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
+    public void ReScene()
+    {
+        MiniRoom.SetActive(false);
+        planeGenerator.SetActive(true);
+    }
 }

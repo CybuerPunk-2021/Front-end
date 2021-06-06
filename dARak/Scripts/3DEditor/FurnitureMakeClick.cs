@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class FurnitureMakeClick : MonoBehaviour
 {
@@ -32,31 +33,50 @@ public class FurnitureMakeClick : MonoBehaviour
 
     private void OnMouseDown()
     {
-        isclicked = true;
-        createalpha = Instantiate(alpha150, gameObject.transform);
-        var xpos = Input.mousePosition.x;
-        var ypos = Input.mousePosition.y;
-        Vector3 mousepos = Camera.ScreenToWorldPoint(new Vector3(xpos, ypos, 99.5f));
-        createalpha.transform.position = mousepos;
+        if (!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+        {
+            isclicked = true;
+            createalpha = Instantiate(alpha150, gameObject.transform.position, gameObject.transform.rotation);
+        }
     }
 
     private void OnMouseDrag()
     {
-        if (isclicked == true)
+        if (!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
         {
-            // 마우스따라 반투명 캐릭터가 움직임
-            var xpos = Input.mousePosition.x;
-            var ypos = Input.mousePosition.y;
-            Vector3 mousepos = Camera.ScreenToWorldPoint(new Vector3(xpos, ypos, 99.5f));
-            createalpha.transform.position = new Vector3(mousepos.x, mousepos.y, gameObject.transform.position.z);
+            if (isclicked)
+            {
+                // 마우스따라 반투명 캐릭터가 움직임
+                var xpos = Input.mousePosition.x;
+                var ypos = Input.mousePosition.y;
+                Vector3 mousepos = Camera.ScreenToWorldPoint(new Vector3(xpos, ypos, 101.9f - gameObject.transform.position.y));
+                createalpha.transform.position = mousepos;
+                //createalpha.transform.position = new Vector3(mousepos.x, mousepos.y, gameObject.transform.position.z);
+            }
         }
     }
-
+    //-4.3 ~ 4.3,  0.8~-7.84
     private void OnMouseUp()
     {
-        isclicked = false;
-        GameObject a = Instantiate(realFurniture, createalpha.transform.position, Quaternion.identity);
-        a.transform.parent = GameObject.Find("Myroom").transform;
-        Destroy(createalpha);
+        if (!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+        {
+            isclicked = false;
+            //Quaternion rotation = Quaternion.identity;
+            //rotation.eulerAngles = new Vector3(realFurniture.transform.rotation.x, realFurniture.transform.rotation.y, realFurniture.transform.rotation.z);
+            //Debug.Log(rotation);
+            GameObject a = Instantiate(realFurniture, createalpha.transform.position, createalpha.transform.rotation);
+            
+            if (a.transform.position.x < -4.3f)
+                a.transform.position = new Vector3(-4.3f, a.transform.position.y, a.transform.position.z);
+            if (a.transform.position.x > 4.3f)
+                a.transform.localPosition = new Vector3(4.3f, a.transform.position.y, a.transform.position.z);
+            if (a.transform.localPosition.z < -7.9f)
+                a.transform.localPosition = new Vector3(a.transform.localPosition.x, a.transform.localPosition.y, -7.9f);
+            if (a.transform.localPosition.z > 0.8f)
+                a.transform.localPosition = new Vector3(a.transform.localPosition.x, a.transform.localPosition.y, 0.8f);
+
+            a.transform.parent = GameObject.Find("Myroom").transform;
+            Destroy(createalpha);
+        }
     }
 }

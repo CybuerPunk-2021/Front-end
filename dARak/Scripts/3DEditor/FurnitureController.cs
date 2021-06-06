@@ -22,8 +22,9 @@ public class FurnitureController : MonoBehaviour
             GameObject furniturePrefab = furnitureList[info.item_list[i].iid];
             GameObject furniture = Instantiate(furniturePrefab);
             furniture.transform.parent = GameObject.Find("Myroom").transform;
-            furniture.transform.rotation = Quaternion.Euler(info.item_list[i].rotation[0], info.item_list[i].rotation[1], info.item_list[i].rotation[2]);
-            furniture.transform.localPosition = new Vector3(info.item_list[i].position[0], info.item_list[i].position[1], info.item_list[i].position[2]);
+            furniture.transform.Rotate(new Vector3(info.item_list[i].rotation[0], info.item_list[i].rotation[1], info.item_list[i].rotation[2]), Space.World);
+            //furniture.transform.rotation = Quaternion.Euler(info.item_list[i].rotation[0], info.item_list[i].rotation[1], info.item_list[i].rotation[2]);
+            furniture.transform.position = new Vector3(info.item_list[i].position[0], info.item_list[i].position[1], info.item_list[i].position[2]);
             furniture.transform.localScale = new Vector3(info.item_list[i].scale[0], info.item_list[i].scale[1], info.item_list[i].scale[2]);
         }
     }
