@@ -58,7 +58,6 @@ public class MainSceneScript : MonoBehaviour
     {
         Snapshot_roominfo info = new Snapshot_roominfo();
         info.uid = socketpp.other_player_uid;
-        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(info));
 
         if (EventSystem.current.currentSelectedGameObject.name == "ARPannel_RealModeBtn")
         {
@@ -72,6 +71,7 @@ public class MainSceneScript : MonoBehaviour
         {
             info.timestamp = socketpp.snapshot_timestamp;
         }
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(info));
         SceneManager.LoadScene("ARReal");
     }
 
@@ -79,7 +79,6 @@ public class MainSceneScript : MonoBehaviour
     {
         Snapshot_roominfo info = new Snapshot_roominfo();
         info.uid = socketpp.other_player_uid;
-        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(info));
 
         if (EventSystem.current.currentSelectedGameObject.name == "ARPannel_MiniModeBtn")
         {
@@ -92,6 +91,7 @@ public class MainSceneScript : MonoBehaviour
         {
             info.timestamp = socketpp.snapshot_timestamp;
         }
+        socketpp.receiveMsg = socketpp.socket(JsonUtility.ToJson(info));
         SceneManager.LoadScene("ARMini");
     }
     public void Active3DEditor()

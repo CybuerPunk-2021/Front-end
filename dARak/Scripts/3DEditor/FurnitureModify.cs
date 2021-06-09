@@ -50,7 +50,7 @@ public class FurnitureModify : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+        if (!IsPointerOverUIObject())
         {
             isclicked = true;
             createalpha = Instantiate(alpha150, gameObject.transform.position, gameObject.transform.rotation);
@@ -110,5 +110,14 @@ public class FurnitureModify : MonoBehaviour
                 //+new Vector3(0, 45f, 0)
             }
         }
+    }
+
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 }
