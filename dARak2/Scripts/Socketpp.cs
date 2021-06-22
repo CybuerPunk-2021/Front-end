@@ -19,12 +19,17 @@ public class Socketpp : MonoBehaviour
     public string receiveMsg;
     public string player_nickname;
     public string other_nickname;
+    public string player_email;
+    public string player_password;
     public string player_recent_timestamp;
+    public string player_profile_timestamp;
+    public int player_profile_size;
     public string snapshot_timestamp = "Not";
     public string snapshot_intro;
     public int snapshot_like;
     public int player_uid;
     public int other_player_uid;
+    public int tutorial_flag;
     //public string timeStamp = "Not";
     public Firebase.Auth.FirebaseUser newUser;
     public List<ImgQueue> _imgqueue;
@@ -44,34 +49,36 @@ public class Socketpp : MonoBehaviour
         //Debug.Log("Connected... Enter Q to exit");
     }
 
-    // Update is called once per frame
     void Update()
     {
         foreach (Socketpp.ImgQueue iq in _imgqueue)
         {
             if (File.Exists(iq.path))
             {
-                iq.img.sprite = GameObject.Find("View_Main").GetComponent<MainSceneScript>().SystemIOFileLoad(iq.path);
-                _imgqueue.Remove(iq);
-                break;
+                FileInfo info = new FileInfo(iq.path);
+
+                Debug.Log("INFO: " + info.Length.ToString() + ", iq: " + iq.size.ToString());
+                if ((int)info.Length == iq.size)
+                {
+                    iq.img.sprite = GameObject.Find("MasterCanvas").GetComponent<MainSceneScript>().SystemIOFileLoad(iq.path);
+                    _imgqueue.Remove(iq);
+                }
             }
+            break;
         }
     }
     public class ImgQueue
     {
         public Image img;
         public string path;
+        public int size;
     }
 
     public string socket(string cmd)
     {
         byte[] receiverBuff = new byte[163840];
-        Debug.Log("Connected... Enter Q to exit");
-        // Q 를 누를 때까지 계속 Echo 실행
         byte[] buff = Encoding.UTF8.GetBytes(cmd);
-        // (3) 서버에 데이타 전송
         sock.Send(buff, SocketFlags.None);
-        // (4) 서버에서 데이타 수신
         int n = sock.Receive(receiverBuff);
         string data = Encoding.UTF8.GetString(receiverBuff, 0, n);
 
@@ -140,42 +147,18 @@ public class Socketpp : MonoBehaviour
             }
         });
     }
-    /*
-    public string cmd1;
-    public string cmd2;
-    public void ImageSend()
+
+    IEnumerator Wait(ImgQueue iq)
     {
-        byte[] receiverBuff = new byte[5000000];
-        Debug.Log("Connected... Enter Q to exit");
-        // Q 를 누를 때까지 계속 Echo 실행
-        byte[] buff = Encoding.UTF8.GetBytes(cmd1);
-        // (3) 서버에 데이타 전송
-        sock.Send(buff, SocketFlags.None);
-        // (4) 서버에서 데이타 수신
-        int n = sock.Receive(receiverBuff);
-        Debug.Log("됨");
-        buff = Encoding.UTF8.GetBytes(cmd2);
-        Debug.Log("됨2");
+        yield return new WaitForSeconds(10f);
+        iq.img.sprite = GameObject.Find("MasterCanvas").GetComponent<MainSceneScript>().SystemIOFileLoad(iq.path);
+        _imgqueue.Remove(iq);
 
-        // (3) 서버에 데이타 전송
-        sock.Send(buff, SocketFlags.None);
-        Debug.Log("됨3");
-
-        // (4) 서버에서 데이타 수신
-        n = sock.Receive(receiverBuff);
-        Debug.Log("됨4");
-
-        int height = 255;
-        int width = 255;
-        Texture2D target = new Texture2D(height, width);
-        target.LoadRawTextureData(buff);
-        target.Apply();
-        byte[] bytes = target.EncodeToPNG();
-        Debug.Log(Application.dataPath);
-        string path = Application.dataPath + "/absd.png";
-        System.IO.File.WriteAllBytes(path, bytes);
-
-        //string data = Encoding.UTF8.GetString(receiverBuff, 0, n);
     }
-    */
+
+    IEnumerator OneFrame(ImgQueue iq)
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+    }
 }

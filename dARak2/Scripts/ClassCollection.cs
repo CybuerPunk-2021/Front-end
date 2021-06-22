@@ -1,7 +1,28 @@
-﻿using System.Collections;
+﻿/*
+ * 프로토콜 코드
+ * xx_client_to_server : 클라이언트에서 서버로 전송
+ * xx_server_to_client : 서버에서 클라이언트로 전송
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[System.Serializable]
+public class Snapshot_size_client_to_server
+{
+    public string action = "snapshot_size";
+    public int uid;
+    public string timestamp;
+    public int size;
+}
+
+[System.Serializable]
+public class Snapshot_size_server_to_client
+{
+    public string action;
+}
 
 [System.Serializable]
 public class Profile_img_request_size_to_server
@@ -69,6 +90,7 @@ public class Login_server_to_client
     public string action;
     public string nickname;
     public string timestamp;
+    public string email;
     public int uid;
 }
 
@@ -127,6 +149,7 @@ public class Info
     public int like_num;
     public string timestamp;
     public string snapshot_intro;
+    public int size;
 }
 
 
@@ -155,6 +178,7 @@ public class Snapshot
     public string snapshot_intro;
     public int like_num;
     public string timestamp;
+    public int size;
 }
 
 
@@ -225,6 +249,7 @@ public class Follower
 {
     public int uid;
     public string nickname;
+    public string isfollow;
 }
 
 
@@ -259,7 +284,11 @@ public class Followadd_client_to_server
     public int from_uid;
     public int to_uid;
 }
-
+[System.Serializable]
+public class Followadd_server_to_client
+{
+    public string action;
+}
 
 [System.Serializable]
 public class Followdelete_client_to_server
@@ -267,6 +296,11 @@ public class Followdelete_client_to_server
     public string action = "follow_del";
     public int from_uid;
     public int to_uid;
+}
+[System.Serializable]
+public class Followdelete_server_to_client
+{
+    public string action;
 }
 
 //Search Scene
@@ -356,6 +390,7 @@ public class ChangeProfileImage_client_to_server
 {
     public string action = "chg_profile_img";
     public int uid;
+    public int size;
 }
 [System.Serializable]
 public class ChangeProfileImage_server_to_client
@@ -367,19 +402,21 @@ public class ChangeProfileImage_server_to_client
 public class CheckProfileImage_client_to_server
 {
     public string action = "chk_profile_img";
-    public int uid;
+    public int[] uid;
 }
 [System.Serializable]
 public class CheckProfileImage_server_to_client
 {
     public string action = "chk_profile_img";
-    public string timestamp;
+    public string[] timestamp;
+    public int[] size;
 }
 [System.Serializable]
 public class ChangeBackgroundImage_client_to_server
 {
     public string action = "chg_bg_img";
     public int uid;
+    public int size;
 }
 [System.Serializable]
 public class ChangeBackgroundImage_server_to_client
@@ -398,6 +435,7 @@ public class CheckBackgroundImage_server_to_client
 {
     public string action = "chk_bg_img";
     public string timestamp;
+    public int size;
 }
 
 [System.Serializable]
