@@ -1,12 +1,11 @@
 <p align="center">
-  <div align="center"><img src="" width="40%"/></div>
+  <div align="center"><img src="https://user-images.githubusercontent.com/32133264/160149079-cb94d605-2f70-4536-a2cc-7b4aa055a7b0.png" width="50%"/></div>
 </p>
 
-<p align="center"><span>다락AR : 나만의 가상의 집 꾸미기</span> <br> "AR과 SNS 기능을 접목시킨 모바일 어플리케이션 메타버스 서비스"<br> </p>
+**<p align="center"><span> 다락AR : 나만의 가상의 집 꾸미기 </span> <br> "AR과 SNS 기능을 접목시킨 모바일 어플리케이션 메타버스 서비스"<br> </p>**
 
 <p align="center">
-  <div align="center"><img width="320" src = "https://ovenapp.io/view/fzVGqYi0iL4PFPItOqe2xoSDo5lG20ka/HtE7H"><br>  현재 서비스 불가중</div>
-  
+  <div align="center"><img width="180" src = "https://user-images.githubusercontent.com/32133264/160152669-75297343-fd65-4dbc-b786-ec3eb745ca10.png"><br> 서비스 중단</div>
 </p>
 
 ## 프로젝트 소개
@@ -26,35 +25,42 @@
 * [다락 - CyberPunk 2021- 캡스톤 위키](https://capstone.uos.ac.kr/cdc/index.php/CyberPunk2021)
 
 ## 프로젝트 전체 구상도
-![프로젝트 설계]()
+![프로젝트 설계](https://user-images.githubusercontent.com/32133264/160152330-85c8371b-06ae-40d1-9816-355792def7ba.png)
 
 ## 사용한 기술 스택
-![기술 스택]()
+![기술 스택](https://user-images.githubusercontent.com/32133264/160152319-8654e6ef-0f91-432c-806b-b2c6635aa5db.png)
 
 ## 프로젝트 화면 구성도
 * [프로토타이핑](https://ovenapp.io/view/fzVGqYi0iL4PFPItOqe2xoSDo5lG20ka/HtE7H)
 * UI플로우  
-![UIFLOW]()
+   
+![UIFLOW](https://user-images.githubusercontent.com/32133264/160151404-f198d96e-b167-4b28-b55f-1384142b1999.png)
 
 
 ## Demo Video
-
-<div>
-  <img width="320" src = "">
-</div>
-
+* [데모 동영상]()
 
 ## Feature
 
 ### AR
+![AR](https://user-images.githubusercontent.com/32133264/160155511-742be449-663a-425c-80d5-95a9738edff0.png)
+
+
 1. AR Mini 모드  
-![ARMini]()
+![ARMini](https://user-images.githubusercontent.com/32133264/160153865-d8e0c346-e8e2-4e48-8369-391d0ea04232.png)
 
 2. AR Real 모드  
-![ARReal]()
+![ARReal](https://user-images.githubusercontent.com/32133264/160153878-0896b9fb-ec51-4050-8d22-0cf40db4fad7.png)
 
 3. 3D Editor 모드  
-![3DEditor]()
+![3DEditor](https://user-images.githubusercontent.com/32133264/160153888-71240c3f-6272-4148-9122-5f7e023e247f.png)
 
 ### SNS
-![TimeLine]()
+1. 메인화면  
+![Main](https://user-images.githubusercontent.com/32133264/160154856-ce9fed8e-77ac-4c7c-a53c-6b2e2c425b8c.png)  
+
+2. 타임라인  
+![TimeLine](https://user-images.githubusercontent.com/32133264/160154924-742d4599-1a3a-4127-9fa6-4db83fae206d.png)  
+
+3. 팔로우목록  
+![Neighbor](https://user-images.githubusercontent.com/32133264/160154879-d590ac73-1bff-4858-83c8-b566143d3723.png)
